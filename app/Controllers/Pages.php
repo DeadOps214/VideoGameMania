@@ -6,18 +6,9 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class Games extends BaseController
 {
 	public function index()
-		{
-			$model = model(GamesModel::class);
-	
-			$data = [
-				'games_name' => $model->getvideogames(),
-				'game_id'     => 'Games archive',
-			];
-
-			return view('templates/header', $data)
-				. view('games/index')
-				. view('templates/footer');
-		}
+	{
+		return view('welcome_message')
+	}
     public function view(string $page = 'home')
     {
               if (! is_file(APPPATH . 'Views/pages/' . $page . '.php')) {

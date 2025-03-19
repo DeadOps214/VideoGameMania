@@ -1,15 +1,13 @@
-<h2><?= esc($title) ?></h2>
-
 <?php if ($games_name !== []): ?>
 
     <?php foreach ($games_name as $games_item): ?>
 
-        <h3><?= esc($games_name['title']) ?></h3>
+        <h3><?= esc($games_item['game_name']) ?></h3>
 
         <div class="main">
-            <?= esc($genre['body']) ?>
+            <?= esc($games_item['genre']) ?>
         </div>
-        <p><a href="/Games/<?= esc($geams_name['slug'], 'url') ?>">View article</a></p>
+
 
     <?php endforeach ?>
 
