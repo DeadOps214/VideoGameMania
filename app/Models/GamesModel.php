@@ -8,7 +8,7 @@ class GamesModel extends Model
 {
     protected $table = 'videogames';
 
-    public function getvideogames($slug = false) // Remove the semicolon here
+    public function getvideogames($slug = false)
     {
         if ($slug === false) 
         {
