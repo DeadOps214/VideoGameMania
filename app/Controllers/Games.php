@@ -42,4 +42,48 @@ class Games extends BaseController
             . view('games/view')
             . view('templates/footer');
     }
+	
+	    public function new()
+    {
+        helper('form');
+
+        return view('templates/header', ['title' => 'Create A Games Item'])
+            . view('games/create')
+            . view('templates/footer');
+    }
+	
+	    public function create()
+    {
+        helper('form');
+
+        $data = $this->request->getPost(['game_name', 'genre', 'price', 'release_date']);
+
+        // Checks whether the submitted data passed the validation rules.
+        if (! $this->validateData($data, [
+            'game_name' => 'required|max_length[255]|min_length[3]',
+            'genre'  => 'required|max_length[5000]|min_length[10]',
+			'price'  => 'required|max_length[5000]|min_length[3]',
+			'release_date'  => 'required|max_length[10]|min_length[10]',
+        ])) {
+            // The validation fails, so returns the form.
+            return $this->new();
+        }
+
+        // Gets the validated data.
+        $post = $this->validator->getValidated();
+
+        $model = model(GamesModel::class);
+
+        $model->save([
+            'game_name' => $post['game_name'],
+            'slug'  => url_title($post['game_name'], '-', true),
+            'genre'  => $post['genre'],
+			'price'  => $post['price'],
+			'release_date'  => $post['release_date'],
+        ]);
+
+        return view('templates/header', ['title' => 'Create A Games Item'])
+            . view('games/success')
+            . view('templates/footer');
+    }
 }
