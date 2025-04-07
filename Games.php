@@ -11,14 +11,14 @@ class Games extends BaseController
     {
         $model = model(GamesModel::class);
 
-        // Use 'games_name' to reflect that it contains multiple games
+        
         $data = [
-            'games_name' => $model->getvideogames(), // This should be an array of games
+            'games_name' => $model->getvideogames(), 
             'title' => '',
         ];
 
         return view('templates/header', $data)
-            . view('games/index', $data) // Pass $data to the index view
+            . view('games/index', $data) 
             . view('templates/footer');
     }
 
@@ -73,24 +73,23 @@ class Games extends BaseController
 				. view('templates/footer');
 		}
 
-		// Retrieve validated data
+		
 		$post = $this->validator->getValidated();
 
-		// Format price as a float (optional, but ensures it's stored as a decimal)
+
 		$price = floatval($post['price']);
 
-		// Ensure release date is formatted correctly (it should be in YYYY-MM-DD)
-		$released_date = date('Y-m-d', strtotime($post['released_date']));
 
-		// Prepare the data for insertion
+		
+		
 		$model = model(GamesModel::class);
 
 		$model->save([
 			'game_name'    => $post['game_name'],
 			'slug'         => url_title($post['game_name'], '-', true),
 			'genre'        => $post['genre'],
-			'price'        => $price,  // Store as a decimal
-			'released_date' => $released_date,  // Store as a date
+			'price'        => $price,  
+			'released_date' => $released_date, 
 			'Image_URL'    => $post['Image_URL'],
 		]);
 
@@ -117,27 +116,6 @@ class Games extends BaseController
 
 		return $this->response->setJSON($suggestions); // Return results as JSON
 }
-	public function map()
-	{
-    $data = [
-        'title' => 'Local Game Stores',
-    ];
-
-    return view('templates/header', $data)
-        . view('games/map', $data) // Create a new view file for the map
-        . view('templates/footer');
-	}
-	public function getStores()
-	{
-    $latitude = $this->request->getGet('lat');
-    $longitude = $this->request->getGet('lng');
-
-    // Load your model
-    $model = model(GamesModel::class); // Assuming you have a model for stores
-
-    // Fetch stores from the database (implement your own logic to find nearest stores)
-    $stores = $model->getNearestStores($latitude, $longitude);
-
-    return $this->response->setJSON($stores);
-	}
 }
+	}
+}$released_date = date('Y-m-d', strtotime($post['released_date']));

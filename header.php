@@ -68,10 +68,10 @@
 
 <h1><?= esc($title) ?></h1>
 
-<!-- Include jQuery -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- AJAX Script for Search Suggestions -->
+
 <script>
 $(document).ready(function() {
     $('#search').on('input', function() {
