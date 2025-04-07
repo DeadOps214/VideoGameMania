@@ -1,10 +1,10 @@
 <div class="container mt-4">
-    <h2><?= esc($title) ?></h2>
+
     <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-0 justify-content-center ">
         <?php if (!empty($games_name)): ?>
             <?php foreach ($games_name as $games_item): ?>
                 <div class="col-md-4 mb-4">
-                    <div class="card custom-card"> <!-- Add a custom class for styling -->
+                    <div class="card custom-card">
                         <img src="<?= esc($games_item['Image_URL']) ?>" class="card-img-top" alt="<?= esc($games_item['game_name']) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= esc($games_item['game_name']) ?></h5>
