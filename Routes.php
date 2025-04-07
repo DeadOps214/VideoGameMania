@@ -12,7 +12,9 @@ use App\Controllers\Games;
 $routes->get('games/', [Games::class, 'index']);   
 $routes->get('games/new', [Games::class, 'new']);
 $routes->post('games/', [Games::class, 'create']); 
-$routes->get('games/suggest', 'Games::suggest');     
+$routes->get('games/suggest', 'Games::suggest');  
+$routes->get('games/map', 'Games::map');
+$routes->get('api/stores', 'Games::getStores');
 $routes->get('games/(:segment)', [Games::class, 'show']);
 
 $routes->get('pages', [Pages::class, 'index']);

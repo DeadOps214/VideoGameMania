@@ -14,7 +14,7 @@ class Games extends BaseController
         // Use 'games_name' to reflect that it contains multiple games
         $data = [
             'games_name' => $model->getvideogames(), // This should be an array of games
-            'title' => 'VideoGameMania',
+            'title' => '',
         ];
 
         return view('templates/header', $data)
@@ -47,47 +47,58 @@ class Games extends BaseController
     {
         helper('form');
 
-        return view('templates/header', ['title' => 'Create A Games Item'])
+        return view('templates/header', ['title' => 'Add  A New Game'])
             . view('games/create')
             . view('templates/footer');
     }
 	
-	    public function create()
-    {
-        helper('form');
+	public function create()
+	{
+		helper('form');
 
-        $data = $this->request->getPost(['game_name', 'genre', 'price', 'release_date', 'Image_URL']);
+		// Retrieve the posted data
+		$data = $this->request->getPost(['game_name', 'genre', 'price', 'release_date', 'Image_URL']);
 
-        // Checks whether the submitted data passed the validation rules.
-        if (! $this->validateData($data, [
-            'game_name' => 'required|max_length[255]|min_length[3]',
-            'genre'  => 'required|max_length[5000]|min_length[10]',
-			'price'  => 'required|max_length[5000]|min_length[3]',
-			'release_date'  => 'required|max_length[10]|min_length[10]',
-			'Image_URL' => 'required|max_length[1000000]|min_length[3]',
-        ])) {
-            // The validation fails, so returns the form.
-            return $this->new();
-        }
+		// Perform validation
+		if (!$this->validate([
+			'game_name'    => 'required|max_length[255]|min_length[3]',
+			'genre'        => 'required|max_length[5000]|min_length[10]',
+			'price'        => 'required|numeric',  // Ensure price is numeric
+			'released_date' => 'required|valid_date[Y-m-d]',  // Ensure release date is in YYYY-MM-DD format
+			'Image_URL'    => 'required|max_length[1000000]|min_length[3]',
+		])) {
+			// Validation fails, return form
+			return view('templates/header', ['title' => 'Create A Game Item'])
+				. view('games/create')
+				. view('templates/footer');
+		}
 
-        // Gets the validated data.
-        $post = $this->validator->getValidated();
+		// Retrieve validated data
+		$post = $this->validator->getValidated();
 
-        $model = model(GamesModel::class);
+		// Format price as a float (optional, but ensures it's stored as a decimal)
+		$price = floatval($post['price']);
 
-        $model->save([
-            'game_name' => $post['game_name'],
-            'slug'  => url_title($post['game_name'], '-', true),
-            'genre'  => $post['genre'],
-			'price'  => $post['price'],
-			'release_date'  => $post['release_date'],
-			'Image_URL'  => $post['Image_URL'],
-        ]);
+		// Ensure release date is formatted correctly (it should be in YYYY-MM-DD)
+		$released_date = date('Y-m-d', strtotime($post['released_date']));
 
-        return view('templates/header', ['title' => 'Create A Games Item'])
-            . view('games/success')
-            . view('templates/footer');
-    }
+		// Prepare the data for insertion
+		$model = model(GamesModel::class);
+
+		$model->save([
+			'game_name'    => $post['game_name'],
+			'slug'         => url_title($post['game_name'], '-', true),
+			'genre'        => $post['genre'],
+			'price'        => $price,  // Store as a decimal
+			'released_date' => $released_date,  // Store as a date
+			'Image_URL'    => $post['Image_URL'],
+		]);
+
+		return view('templates/header', ['title' => 'Create A Game Item'])
+			. view('games/success')
+			. view('templates/footer');
+}
+
 	
 	public function suggest()
 	{
@@ -106,5 +117,27 @@ class Games extends BaseController
 
 		return $this->response->setJSON($suggestions); // Return results as JSON
 }
+	public function map()
+	{
+    $data = [
+        'title' => 'Local Game Stores',
+    ];
 
+    return view('templates/header', $data)
+        . view('games/map', $data) // Create a new view file for the map
+        . view('templates/footer');
+	}
+	public function getStores()
+	{
+    $latitude = $this->request->getGet('lat');
+    $longitude = $this->request->getGet('lng');
+
+    // Load your model
+    $model = model(GamesModel::class); // Assuming you have a model for stores
+
+    // Fetch stores from the database (implement your own logic to find nearest stores)
+    $stores = $model->getNearestStores($latitude, $longitude);
+
+    return $this->response->setJSON($stores);
+	}
 }
