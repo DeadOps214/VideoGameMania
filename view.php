@@ -50,6 +50,9 @@
     </style>
 </head>
 <body>
+
+        
+        <!-- Display the game image -->
         <img src="<?= esc($games['Image_URL']) ?>" alt="Game Image" class="game-image">
 
         <p><strong>Genre:</strong> <?= esc($games['genre']) ?></p>
